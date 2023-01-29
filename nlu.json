@@ -1,7 +1,7 @@
 {
   "project" : {
-    "id" : "zb-jgraph-cailapub",
-    "name" : "zb-jgraph-cailapub",
+    "id" : "roga_i_kopyta-1000070736-hQm",
+    "name" : "roga_i_kopyta-1000070736-hQm",
     "folder" : "/jaicp"
   },
   "settings" : {
@@ -17,7 +17,50 @@
     "shared" : false
   },
   "intents" : [ {
-    "id" : 11239672,
+    "path" : "/Хочу заказать карту",
+    "enabled" : true,
+    "shared" : false,
+    "phrases" : [ {
+      "text" : "Хочу заказать карту"
+    } ],
+    "classificationRules" : {
+      "refs" : [ ]
+    },
+    "priority" : 0
+  }, {
+    "path" : "/снятие наличных",
+    "enabled" : true,
+    "shared" : false,
+    "phrases" : [ {
+      "text" : "снятие наличных"
+    } ],
+    "classificationRules" : {
+      "refs" : [ ]
+    },
+    "priority" : 0
+  }, {
+    "path" : "/зачисление социальных выплат или пенсии",
+    "enabled" : true,
+    "shared" : false,
+    "phrases" : [ {
+      "text" : "зачисление социальных выплат или пенсии"
+    } ],
+    "classificationRules" : {
+      "refs" : [ ]
+    },
+    "priority" : 0
+  }, {
+    "path" : "/Нет",
+    "enabled" : true,
+    "shared" : false,
+    "phrases" : [ {
+      "text" : "Нет"
+    } ],
+    "classificationRules" : {
+      "refs" : [ ]
+    },
+    "priority" : 0
+  }, {
     "path" : "/Оставить отзыв",
     "enabled" : true,
     "shared" : false,
@@ -34,10 +77,12 @@
     }, {
       "text" : "оставить отзыв"
     } ],
+    "classificationRules" : {
+      "refs" : [ ]
+    },
     "patterns" : [ ],
     "priority" : 0
   }, {
-    "id" : 11239539,
     "path" : "/Статус заказа",
     "enabled" : true,
     "shared" : false,
@@ -48,19 +93,23 @@
     }, {
       "text" : "когда прибудет курьер?"
     } ],
+    "classificationRules" : {
+      "refs" : [ ]
+    },
     "patterns" : [ ],
     "priority" : 0
   }, {
-    "id" : 11239969,
     "path" : "/Номер заказа",
     "description" : "В этом интенте мы используем системную сущность «номер» (@duckling.number) вместо примеров фраз. Так интент будет срабатывать при вводе пользователем числа, например «42» или «сорок два».",
     "enabled" : true,
     "shared" : false,
     "phrases" : [ ],
+    "classificationRules" : {
+      "refs" : [ ]
+    },
     "patterns" : [ "@duckling.number" ],
     "priority" : 0
   }, {
-    "id" : 11239542,
     "path" : "/Часы работы",
     "enabled" : true,
     "shared" : false,
@@ -77,7 +126,62 @@
     }, {
       "text" : "как вы работаете?"
     } ],
+    "classificationRules" : {
+      "refs" : [ ]
+    },
     "patterns" : [ ],
+    "priority" : 0
+  }, {
+    "path" : "/оплата в магазинах",
+    "enabled" : true,
+    "shared" : false,
+    "phrases" : [ {
+      "text" : "оплата в магазинах"
+    } ],
+    "classificationRules" : {
+      "refs" : [ ]
+    },
+    "priority" : 0
+  }, {
+    "path" : "/зачисление заработной платы",
+    "enabled" : true,
+    "shared" : false,
+    "phrases" : [ {
+      "text" : "зачисление заработной платы"
+    } ],
+    "classificationRules" : {
+      "refs" : [ ]
+    },
+    "priority" : 0
+  }, {
+    "path" : "/другое",
+    "enabled" : true,
+    "shared" : false,
+    "phrases" : [ {
+      "text" : "другое"
+    } ],
+    "classificationRules" : {
+      "refs" : [ ]
+    },
+    "priority" : 0
+  }, {
+    "path" : "/Да",
+    "enabled" : true,
+    "shared" : false,
+    "phrases" : [ {
+      "text" : "Да"
+    } ],
+    "classificationRules" : {
+      "refs" : [ ]
+    },
+    "priority" : 0
+  }, {
+    "path" : "/Новый интент",
+    "enabled" : true,
+    "shared" : false,
+    "classificationRules" : {
+      "refs" : [ ]
+    },
     "priority" : 0
   } ],
   "entities" : [ ],
@@ -185,5 +289,6 @@
   }, {
     "name" : "zb.number",
     "enabled" : false
-  } ]
+  } ],
+  "faq" : [ ]
 }
