@@ -1,5 +1,4 @@
-require: slotfilling/slotFilling.sc
-  module = sys.zb-common
+require: requirements.sc
 theme: /
 
     state: ШАГ1
