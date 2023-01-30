@@ -5,3 +5,6 @@ theme: /
         q!: $regex</start>
         a: Hello
 
+    state: ШАГ2
+        q!: * card *
+        a: Hello2
