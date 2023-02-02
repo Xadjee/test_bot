@@ -34,8 +34,6 @@ theme: /
         elseif: $temp.lengthId < 9
             go!: /numberShort
         elseif: $session.clientID && !$session.specialist
-            script:
-                log("BKSCCNJCNSCNNCJSCNSKCCKJNSC " + $session.clientID)
             go!: /specifySpecialty
         elseif: $session.clientID && $session.specialist
             go!: /printShedule
