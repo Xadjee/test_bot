@@ -1,6 +1,4 @@
 theme: /
-require: slotfilling/slotFilling.sc
-  module = sys.zb-common
+require: data.js
+require: helpers.js
 require: patterns.sc
-require: clients.js
-require: doctors.js
