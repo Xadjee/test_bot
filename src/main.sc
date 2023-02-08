@@ -1,91 +1,117 @@
-require: requirements.sc
+patterns:
+    $offers = (порекоменд*/посовет*/предл*/помо*)
+    $wish = (жела*/хотел*/хоч*/помо*)
+    $lunch = (обед*/ланч*/лэнч*/ленч*/суп*)
+    $dish = (блюд*/еду/еды/еда/есть/кушать/поесть/покуш*/кухн*)
+    $menu = (меню*/миню*)
+    $fishMenu = (рыб*/поке)
+    $cooking = (готовите/подаете/подаёте)
+    $pronoun = (что[-то]/какое[-то]/какие[-то])
+    $cheeseMenu = (сыр*/чизкейк*)
+    $vegeterianMenu = (гриб*/овощ*/фрукт*/вьетнам*)
+    $meatMenu = (мяс*/стейк*/остр*)
+    $no = (не/нет/непереносимость/нельзя/без)
 theme: /
 
     state: Start
         q!: $regex</start>
-        a: Здравствуйте!
-        # Похоже что при перезапуске бота сессия не очищается
-        # да, мы с Ваней тоже обнаружили, что странно. возможно, это особенность виджета здесь, но точной причины не знаю
-        script:
-            $session = {}
-    
-    state: noMatch
-        q!: *
-        a: Извините, не могу ответить на ваш вопрос. Попробуйте его переформулировать.
-    
-    state: doctorScheduleRequest
-        # Дополните паттерны так, чтобы в этот стейт попадали все вопросы из файла helpers.js
-        #q!: * (расписани* | $doctors | $medics | $admissions) *
-        q!: * {$when $admissions $medics}  *
-        q!: * { расписан* ($doctors | $medics)}*
-
-        script:
-            if ($parseTree.text) {
-                var tempSpeciality = doctorSpecialities($parseTree.text)
-                if (tempSpeciality){
-                    $session.doctorSpeciality = tempSpeciality;
-                }
-            }
-
-        if: $session.authSuccess
-            if: !$session.doctorSpeciality
-                go!: /doctorScheduleRequest/doctorSpecialityRequest
-            else:
-                go!: /printShedule
-        else:
-            go!: /autorizationRequest
-
-        state: doctorSpecialityRequest
-            a: Уточните, пожалуйста, специальность врача, чтобы узнать его расписание.
-            
-            state: doctorSpecialitySpecified
-                q: * $doctors *
-
-                if: $parseTree.text
-                    go!: /doctorScheduleRequest
-
-
-    state: autorizationRequest
-        a: Пожалуйста, назовите ваш идентификационный номер.
-
-        state: authorizationInput
-            q: * $numbers *
-            script:
-                if ($parseTree.text){
-                    parseDigit($parseTree, $session, $temp);
-                }
-    
-            if: $session.authSuccess
-                if: !$session.doctorSpeciality
-                    go!: /doctorScheduleRequest
-                else:
-                    go!: /printShedule
-            else:
-                if: $temp.authResult == "lessThan9"
-                    go!: /autorizationRequest/authorizationInput/lessThan9Digits
-                if: $temp.authResult == "moreThan9"
-                    go!: /autorizationRequest/authorizationInput/moreThan9Digits
-                if: $temp.authResult == "invalidId"
-                    go!: /autorizationRequest/authorizationInput/invalidID
-            
-            state: lessThan9Digits
-                a: Вы назвали меньше цифр, чем нужно. Попробуйте ещё раз.
-                go: /autorizationRequest
-            
-            state: moreThan9Digits
-                a: Вы назвали больше цифр, чем нужно. Попробуйте ещё раз.
-                go: /autorizationRequest
+        a: Добро пожаловать в наш ресторан, я виртаульный помощник, готов помочь вам сделать заказ!
+        
+        
+        
+        state: Menu
+            a: Что вы предпочитаете:\n
+                - Кухня для вегетеранцев\n
+                - Блюда из мяса\n
+                - Супы\ланчи\n
+                - Рыбное меню\n
+                - Закуски из сыра
+        
+        state: Ans_vegeterian
+            a: У нас есть вегетерианские блюда:\n
+                - блюдо 1\n
+                - блюдо 2\n
+                - блюдо n
                 
-            state: invalidID
-                a: Перевод на оператора.
+        state: Ans_meat
+            a: У нас есть блюда из мяса:\n
+                - блюдо 1\n
+                - блюдо 2\n
+                - блюдо n
+                
+        state: Ans_fish
+            a: У нас есть рыбное меню:\n
+                - блюдо 1\n
+                - блюдо 2\n
+                - блюдо n
+                
+        state: Ans_cheese
+            a: У нас есть закуски из сыра:\n
+                - блюдо 1\n
+                - блюдо 2\n
+                - блюдо n
+                
+        state: Ans_soup
+            a: У нас есть богатое меню супов и ланчей:\n
+                - блюдо 1\n
+                - блюдо 2\n
+                - блюдо n
+                
+        state: react_wantSomething
+            # блюдо порекомендуйте пожалуйста
+            # помоги выбрать что покушать
+            # посоветуй что можно поесть
+            # порекомендуй что-нибудь из меню
+            q: * {[$offers | $wish] * ($dish | $menu)} *
+            go!: /Start/Menu
+            
+        state: react_wantSoup
+            # помоги выбрать обед для ребенка
+            # посоветуй блюдо для ланча
+            q: * {[$offers | $wish] * $lunch * [$dish | $menu | $cooking]} *
+            # что из супов есть в меню?
+            q: * {[$pronoun] * $lunch * [$menu | $cooking]} *
+            go!: /Start/Ans_soup
+            
+        state: react_wantMeat
+            # есть что-то острое?
+            q: * {[$offers | $wish | $pronoun] * $meatMenu * [$dish | $menu | $cooking]} *
+            go!: /Start/Ans_meat
+            
+        state: react_wantFish
+            # поке подаете?
+            # рыбу хочется поесть
+            # у вас с рыбой блюда есть?
+            # хотелось бы что-то из красной рыбы
+            q: * {[$offers | $wish] * $fishMenu * [$dish | $menu | $cooking]} *
+            go!: /Start/Ans_fish
+            
+        state: react_wantVegeterian
+            # посоветуй еду из овощей
+            # с грибами порекомендуйте что-нибудь
+            # вьетнамская кухня есть?
+            q: * {[$offers | $wish] * $vegeterianMenu * [$dish | $menu | $cooking]} *
+            go!: /Start/Ans_vegeterian
+            
+        state: react_wantCheese
+            # хочу съесть какое-то блюдо с сыром
+            q: * {[$offers | $wish | $pronoun] * $cheeseMenu * [$dish | $menu | $cooking]} *
+            go!: /Start/Ans_cheese
+            
+        state: react_noMeat
+            # я не ем мяса
+            q: {[$offers | $wish] * $no *  $meatMenu * [$dish | $menu | $cooking]} *
+            go!: /Start/Ans_vegeterian
+        state: react_noFish
+            # есть ли блюда без рыбы?
+            # рыбу мне нельзя
+            q: *  {[$offers | $wish] * $no *  $fishMenu * [$dish | $menu | $cooking]} *
+            go!: /Start/Ans_meat
+        state: react_noCheese
+            # у меня непереносимость лактозы
+            q: *  {[$offers | $wish] * $no *  ($cheeseMenu/лактоз*) * [$dish | $menu | $cooking]} *
+            go!: /Start/Ans_fish
 
 
-    state: printShedule
-        script:
-            $temp.answer = getShedule($session.doctorSpeciality);
-            $temp.answer += "</br>";
-            $temp.answer += getSheduleMorphology($session.doctorSpeciality);
-            if ($temp.answer === "</br>"){
-                $temp.answer = "К сожалению, у меня нет информации о расписании выбранного специалиста.";
-            }
-        a: {{$temp.answer}}
+
+
